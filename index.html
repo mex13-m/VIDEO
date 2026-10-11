@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, ini>
+    <title>مُنزل الميديا الشامل - Termux</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0;>
+        body { background-color: #0f172a; color: #f8fafc; >
+        .card { width: 100%; max-width: 450px; background:>
+        h1 { color: #38bdf8; font-size: 20px; margin-botto>
+        p { color: #94a3b8; font-size: 13px; margin-bottom>
+        .input-group { position: relative; margin-bottom: >
+        input { width: 100%; padding: 14px 14px 14px 75px;>
+        input:focus { border-color: #38bdf8; }
+        .btn-paste { position: absolute; left: 8px; top: 5>
+        .btn-submit { width: 100%; padding: 14px; border: >
+        .status { margin-top: 15px; font-size: 13px; min-h>
+        .result { margin-top: 15px; background: #0f172a; p>
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🚀 مُنزل الميديا الشامل (Termux)</h1>
+        <p>تنزيل الفيديوهات والصور بدون علامة مائية بأعلى >
+        <div class="input-group">
+            <input type="url" id="url" placeholder="ضع راب>
+            <button class="btn-paste" onclick="pasteUrl()">
+        </div>
+        <button class="btn-submit" id="subBtn" onclick="fe>
+        <div class="status" id="status"></div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function pasteUrl() {
+            try {
+                const text = await navigator.clipboard.rea>
+                document.getElementById('url').value = tex>
+            } catch(e) {
+                alert('يرجى السماح بالوصول للحافظة!');
+            }
+        }
+
+        async function fetchMedia() {
+            let url = document.getElementById('url').value>
+            const status = document.getElementById('status>
+            const result = document.getElementById('result>
+            const btn = document.getElementById('subBtn');
+
+            if(!url) {
+                status.innerHTML = '<span style="color:#ef>
+                return;
+            }
+
+            status.innerHTML = 'جاري التنزيل بأعلى جودة لذ>
+            result.style.display = 'none';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'applicatio>
+                    body: JSON.stringify({ url })
+                });
+                const data = await res.json();
+
+                if(data.status) {
+                    status.innerHTML = '<span style="color>
+                    result.innerHTML = '📁 تم الحفظ في:<br>
+                    result.style.display = 'block';
+                } else {
+                    status.innerHTML = '<span style="color>
+                }
+            } catch(err) {
+                status.innerHTML = '<span style="color:#ef>
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
+          
